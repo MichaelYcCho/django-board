@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ post.title }} - 루틴 게시판{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="mb-0">{{ post.title }}</h3>
+                <small class="text-light">
+                    작성자: {{ post.full_name }} | 
+                    작성일: {{ post.created_at|date:"Y년 m월 d일 H:i" }}
+                    {% if post.updated_at != post.created_at %}
+                        | 수정일: {{ post.updated_at|date:"Y년 m월 d일 H:i" }}
+                    {% endif %}
+                </small>
+            </div>
+            <div class="card-body">
+                {% if post.image %}
+                <div class="text-center mb-4">
+                    <img src="{{ post.image.url }}" class="img-fluid rounded" alt="{{ post.title }}" style="max-height: 500px;">
+                </div>
+                {% endif %}
+                
+                <div class="mb-3">
+                    <strong>이메일:</strong> {{ post.email }}
+                </div>
+                
+                <div class="content">
+                    {{ post.content|linebreaks }}
+                </div>
+            </div>
+            <div class="card-footer bg-white">
+                <div class="d-flex justify-content-between">
+                    <a href="{% url 'board_routine:list' %}" class="btn btn-secondary">
+                        <i class="fas fa-list"></i> 목록으로
+                    </a>
+                    <div>
+                        <a href="{% url 'board_routine:update' post.pk %}" class="btn btn-outline-primary">
+                            <i class="fas fa-edit"></i> 수정
+                        </a>
+                        <a href="{% url 'board_routine:delete' post.pk %}" class="btn btn-outline-danger">
+                            <i class="fas fa-trash"></i> 삭제
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

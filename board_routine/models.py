@@ -1,0 +1,37 @@
+from django.db import models
+from django.core.validators import FileExtensionValidator
+
+
+def upload_to_routine(instance, filename):
+    """루틴 업로드 경로"""
+    return f'board_routine/{filename}'
+
+
+class RoutineBoard(models.Model):
+    title = models.CharField('제목', max_length=200)
+    first_name = models.CharField('이름', max_length=50)
+    last_name = models.CharField('성', max_length=50)
+    email = models.EmailField('이메일')
+    password = models.CharField('비밀번호', max_length=128)
+    content = models.TextField('내용')
+    image = models.ImageField(
+        '이미지', 
+        upload_to=upload_to_routine,
+        validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png', 'gif'])],
+        help_text='JPG, JPEG, PNG, GIF 파일만 업로드 가능합니다.',
+        blank=True, null=True
+    )
+    created_at = models.DateTimeField('작성일', auto_now_add=True)
+    updated_at = models.DateTimeField('수정일', auto_now=True)
+
+    class Meta:
+        verbose_name = '루틴 게시판'
+        verbose_name_plural = '루틴 게시판'
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return self.title
+
+    @property
+    def full_name(self):
+        return f"{self.last_name}{self.first_name}"

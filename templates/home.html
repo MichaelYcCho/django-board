@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block title %}게시판 시스템{% endblock %}
+
+{% block content %}
+<div class="jumbotron jumbotron-fluid bg-primary text-white text-center py-5 mb-4 rounded">
+    <div class="container">
+        <h1 class="display-4">게시판 시스템에 오신 것을 환영합니다!</h1>
+        <p class="lead">사진과 루틴을 공유할 수 있는 두 개의 게시판이 준비되어 있습니다.</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="fas fa-camera fa-4x text-primary mb-3"></i>
+                <h3 class="card-title">사진 게시판</h3>
+                <p class="card-text">
+                    아름다운 사진들을 업로드하고 다른 사람들과 공유하세요. 
+                    이미지와 함께 당신의 이야기를 들려주세요.
+                </p>
+                <div class="mt-auto">
+                    <a href="{% url 'board_photo:list' %}" class="btn btn-primary">
+                        <i class="fas fa-images"></i> 사진 게시판 보기
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6 mb-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="fas fa-calendar-check fa-4x text-success mb-3"></i>
+                <h3 class="card-title">루틴 게시판</h3>
+                <p class="card-text">
+                    당신의 일상 루틴을 공유하고 다른 사람들의 루틴에서 영감을 얻으세요. 
+                    건강하고 생산적인 생활을 위한 팁을 나누어보세요.
+                </p>
+                <div class="mt-auto">
+                    <a href="{% url 'board_routine:list' %}" class="btn btn-success">
+                        <i class="fas fa-list-check"></i> 루틴 게시판 보기
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h4><i class="fas fa-info-circle"></i> 사용법</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 text-center mb-3">
+                        <i class="fas fa-edit fa-2x text-primary mb-2"></i>
+                        <h6>1. 글 작성</h6>
+                        <small class="text-muted">제목, 이름, 이메일, 비밀번호, 내용을 입력하여 글을 작성하세요.</small>
+                    </div>
+                    <div class="col-md-3 text-center mb-3">
+                        <i class="fas fa-upload fa-2x text-success mb-2"></i>
+                        <h6>2. 이미지 업로드</h6>
+                        <small class="text-muted">사진 게시판은 이미지 필수, 루틴 게시판은 선택사항입니다.</small>
+                    </div>
+                    <div class="col-md-3 text-center mb-3">
+                        <i class="fas fa-lock fa-2x text-warning mb-2"></i>
+                        <h6>3. 비밀번호 보안</h6>
+                        <small class="text-muted">글 수정이나 삭제 시 비밀번호를 입력하여 본인 확인을 합니다.</small>
+                    </div>
+                    <div class="col-md-3 text-center mb-3">
+                        <i class="fas fa-share fa-2x text-info mb-2"></i>
+                        <h6>4. 공유하기</h6>
+                        <small class="text-muted">작성한 글을 다른 사람들과 자유롭게 공유하세요.</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="text-center mt-5">
+    <p class="text-muted">
+        <i class="fas fa-heart text-danger"></i> 
+        Django로 만든 게시판 시스템 
+        <i class="fas fa-heart text-danger"></i>
+    </p>
+</div>
+{% endblock %}
