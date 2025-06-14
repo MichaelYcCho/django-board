@@ -45,9 +45,112 @@
         .btn-primary:hover {
             background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
         }
-        .navbar {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+        
+        /* 새로운 네비게이션 스타일 */
+        .custom-nav {
+            background-color: rgb(255, 255, 255);
+            width: 100%;
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
+        .nav-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 40px;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: #333;
+        }
+        .logo img {
+            height: 45px;
+            width: auto;
+            object-fit: contain;
+            margin-right: 15px;
+        }
+        .logo-text {
+            font-size: 22px;
+            font-weight: bold;
+            color: #333;
+            text-decoration: none;
+        }
+        .nav-buttons {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px 40px;
+            border-radius: 24px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            border: 1px solid rgb(255, 255, 255);
+            min-width: 200px;
+            text-align: center;
+            white-space: nowrap;
+        }
+        .nav-btn-routine {
+            background-color: rgb(226, 235, 217);
+            color: rgb(5, 5, 5);
+        }
+        .nav-btn-routine:hover {
+            background-color: rgb(210, 225, 195);
+            color: rgb(5, 5, 5);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(226, 235, 217, 0.4);
+        }
+        .nav-btn-photo {
+            background-color: rgb(218, 218, 235);
+            color: rgb(0, 0, 0);
+        }
+        .nav-btn-photo:hover {
+            background-color: rgb(200, 200, 220);
+            color: rgb(0, 0, 0);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(218, 218, 235, 0.4);
+        }
+        
+        @media (max-width: 1200px) {
+            .nav-content {
+                padding: 0 20px;
+            }
+            .nav-btn {
+                min-width: 180px;
+                padding: 12px 30px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .nav-content {
+                flex-direction: column;
+                gap: 20px;
+                padding: 0 15px;
+            }
+            .nav-buttons {
+                flex-direction: column;
+                width: 100%;
+                gap: 15px;
+            }
+            .nav-btn {
+                width: 100%;
+                max-width: 350px;
+                min-width: unset;
+            }
+        }
+        
         .inline-error {
             background-color: #f8d7da;
             border: 1px solid #f5c6cb;
@@ -67,12 +170,19 @@
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark">
-        <div class="container">
-            <a class="navbar-brand" href="/">게시판 시스템</a>
-            <div class="navbar-nav ms-auto">
-                <a class="nav-link" href="/photo/">사진 게시판</a>
-                <a class="nav-link" href="/routine/">읽걷쓰 루틴 챌린지</a>
+    <nav class="custom-nav">
+        <div class="nav-content">
+            <a href="/" class="logo">
+                <img src="https://estedu-img.s3.ap-northeast-2.amazonaws.com/main_icon.png" alt="로고">
+            </a>
+            
+            <div class="nav-buttons">
+                <a href="/routine/" class="nav-btn nav-btn-routine">
+                    01. 읽걷쓰 루틴 챌린지
+                </a>
+                <a href="/photo/" class="nav-btn nav-btn-photo">
+                    02. 사진공모전
+                </a>
             </div>
         </div>
     </nav>
