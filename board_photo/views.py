@@ -15,7 +15,7 @@ def hash_password(password):
 def photo_list(request):
     """사진 게시판 목록"""
     posts = PhotoBoard.objects.all()
-    paginator = Paginator(posts, 10)  # 페이지당 10개씩
+    paginator = Paginator(posts, 9)  # 페이지당 9개씩
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 

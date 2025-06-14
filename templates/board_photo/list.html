@@ -12,7 +12,7 @@
 
 <div class="row">
     {% for post in posts %}
-    <div class="col-md-6 col-lg-4 mb-4">
+    <div class="col-md-4 mb-4">
         <div class="card h-100">
             {% if post.image %}
                 <img src="{{ post.image.url }}" class="card-img-top" style="height: 200px; object-fit: cover;" alt="{{ post.title }}">
@@ -31,7 +31,7 @@
                         작성자: {{ post.full_name }} | {{ post.created_at|date:"Y-m-d H:i" }}
                     </small>
                     <div class="mt-2">
-                        <a href="{% url 'board_photo:detail' post.pk %}" class="btn btn-outline-primary btn-sm">자세히 보기</a>
+                        <a href="{% url 'board_photo:detail' post.pk %}" class="btn btn-outline-primary btn-sm">상세 보기</a>
                     </div>
                 </div>
             </div>

@@ -25,7 +25,15 @@ SECRET_KEY = "django-insecure-rkprtlad%5o&kc2c7#cx0k4t=sl=&amno4^5yz%1gjzoz4^#&j
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
+
+# CSRF 설정 (ngrok 사용 시)
+CSRF_TRUSTED_ORIGINS = [
+    "https://*.ngrok-free.app",
+    "https://*.ngrok.io",
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+]
 
 
 # Application definition
