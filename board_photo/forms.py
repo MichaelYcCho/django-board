@@ -60,16 +60,6 @@ class PhotoBoardForm(forms.ModelForm):
 
 
 class PhotoBoardUpdateForm(forms.ModelForm):
-    password_verify = forms.CharField(
-        label="비밀번호 확인",
-        widget=forms.PasswordInput(
-            attrs={
-                "class": "form-control",
-                "placeholder": "수정을 위해 비밀번호를 입력하세요",
-            }
-        ),
-    )
-
     class Meta:
         model = PhotoBoard
         fields = ["title", "first_name", "last_name", "email", "content", "image"]

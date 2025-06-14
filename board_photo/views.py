@@ -53,8 +53,36 @@ def photo_update(request, pk):
     post = get_object_or_404(PhotoBoard, pk=pk)
 
     if request.method == "POST":
+        # 실제 수정 처리 (비밀번호 검증 완료된 경우)
+        if "update_post" in request.POST and "password_verified" in request.POST:
+            form = PhotoBoardUpdateForm(request.POST, request.FILES, instance=post)
+            if form.is_valid():
+                form.save()
+                messages.success(request, "글이 성공적으로 수정되었습니다.")
+                return redirect("board_photo:detail", pk=post.pk)
+            else:
+                # 폼 에러가 있으면 에러 메시지와 함께 다시 수정 폼 표시
+                error_messages = []
+                for field, errors in form.errors.items():
+                    for error in errors:
+                        if field == "__all__":
+                            error_messages.append(f"{error}")
+                        else:
+                            field_label = form.fields[field].label or field
+                            error_messages.append(f"{field_label}: {error}")
+
+                error_message = "입력하신 정보에 오류가 있습니다: " + "; ".join(
+                    error_messages
+                )
+                messages.error(request, error_message)
+                return render(
+                    request,
+                    "board_photo/update.html",
+                    {"form": form, "post": post, "password_verified": True},
+                )
+
         # 비밀번호 확인
-        if "password_verify" in request.POST:
+        elif "password_verify" in request.POST:
             password_form = PasswordVerifyForm(request.POST)
             if password_form.is_valid():
                 password = password_form.cleaned_data["password"]
@@ -69,13 +97,9 @@ def photo_update(request, pk):
                 else:
                     messages.error(request, "비밀번호가 올바르지 않습니다.")
 
-        # 실제 수정 처리
+        # 비밀번호 검증 없이 수정 시도하는 경우
         elif "update_post" in request.POST:
-            form = PhotoBoardUpdateForm(request.POST, request.FILES, instance=post)
-            if form.is_valid():
-                form.save()
-                messages.success(request, "글이 성공적으로 수정되었습니다.")
-                return redirect("board_photo:detail", pk=post.pk)
+            messages.error(request, "비밀번호 검증이 필요합니다. 다시 시도해주세요.")
 
     # 비밀번호 확인 폼 표시
     password_form = PasswordVerifyForm()

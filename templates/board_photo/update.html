@@ -48,6 +48,7 @@
                 <!-- 실제 수정 폼 -->
                 <form method="post" enctype="multipart/form-data">
                     {% csrf_token %}
+                    <input type="hidden" name="password_verified" value="true">
                     
                     <div class="mb-3">
                         <label for="{{ form.title.id_for_label }}" class="form-label">제목</label>
