@@ -32,8 +32,17 @@
                         {% endif %}
                     </div>
                     
-                    <div class="d-flex justify-content-between">
+                    <div class="d-flex justify-content-between align-items-center">
                         <a href="{% url 'board_routine:detail' post.pk %}" class="btn btn-secondary">취소</a>
+                        {% if messages %}
+                            {% for message in messages %}
+                                {% if message.tags == 'error' %}
+                                    <div class="inline-error">
+                                        <i class="fas fa-exclamation-circle"></i> {{ message }}
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
                         <button type="submit" class="btn btn-danger">
                             <i class="fas fa-trash"></i> 삭제하기
                         </button>

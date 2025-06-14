@@ -1,12 +1,15 @@
 {% extends 'base.html' %}
 
-{% block title %}루틴 게시판{% endblock %}
+{% block title %}읽걷쓰 루틴 챌린지{% endblock %}
 
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2>루틴 게시판</h2>
-    <a href="{% url 'board_routine:create' %}" class="btn btn-primary">
-        <i class="fas fa-plus"></i> 새 글 작성
+    <div>
+        <h2>📚🚶✍️ 읽걷쓰 루틴 챌린지</h2>
+        <p class="text-muted">읽기, 걷기, 쓰기 루틴을 실천하고 인증해보세요!</p>
+    </div>
+    <a href="{% url 'board_routine:create' %}" class="btn btn-success">
+        <i class="fas fa-plus"></i> 챌린지 인증하기
     </a>
 </div>
 
@@ -18,7 +21,7 @@
                 <img src="{{ post.image.url }}" class="card-img-top" style="height: 200px; object-fit: cover;" alt="{{ post.title }}">
             {% else %}
                 <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
-                    <i class="fas fa-calendar-check fa-3x text-muted"></i>
+                    <i class="fas fa-medal fa-3x text-muted"></i>
                 </div>
             {% endif %}
             <div class="card-body d-flex flex-column">
@@ -28,10 +31,10 @@
                 </p>
                 <div class="mt-auto">
                     <small class="text-muted">
-                        작성자: {{ post.full_name }} | {{ post.created_at|date:"Y-m-d H:i" }}
+                        챌린저: {{ post.full_name }} | {{ post.created_at|date:"Y-m-d H:i" }}
                     </small>
                     <div class="mt-2">
-                        <a href="{% url 'board_routine:detail' post.pk %}" class="btn btn-outline-primary btn-sm">자세히 보기</a>
+                        <a href="{% url 'board_routine:detail' post.pk %}" class="btn btn-outline-success btn-sm">인증 보기</a>
                     </div>
                 </div>
             </div>
@@ -40,10 +43,10 @@
     {% empty %}
     <div class="col-12">
         <div class="text-center py-5">
-            <i class="fas fa-calendar-check fa-3x text-muted mb-3"></i>
-            <h4 class="text-muted">아직 작성된 글이 없습니다.</h4>
-            <p class="text-muted">첫 번째 루틴을 공유해보세요!</p>
-            <a href="{% url 'board_routine:create' %}" class="btn btn-primary">글 작성하기</a>
+            <i class="fas fa-medal fa-3x text-muted mb-3"></i>
+            <h4 class="text-muted">아직 챌린지 인증이 없습니다.</h4>
+            <p class="text-muted">첫 번째 읽걷쓰 챌린지를 인증해보세요!</p>
+            <a href="{% url 'board_routine:create' %}" class="btn btn-success">챌린지 인증하기</a>
         </div>
     </div>
     {% endfor %}

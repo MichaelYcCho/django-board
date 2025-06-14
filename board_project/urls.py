@@ -14,6 +14,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
@@ -22,9 +23,9 @@ from . import views
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("photo/", include('board_photo.urls')),
-    path("routine/", include('board_routine.urls')),
-    path("", views.home, name='home'),  # 홈페이지
+    path("photo/", include("board_photo.urls")),
+    path("routine/", include("board_routine.urls")),
+    path("", views.home, name="home"),  # 홈페이지
 ]
 
 # 미디어 파일 서빙 (개발환경에서만)
