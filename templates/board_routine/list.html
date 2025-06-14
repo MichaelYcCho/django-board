@@ -16,7 +16,7 @@
 <div class="row">
     {% for post in posts %}
     <div class="col-md-4 mb-4">
-        <div class="card h-100">
+        <div class="card h-100 clickable-card" style="cursor: pointer; transition: transform 0.2s ease-in-out;" onclick="window.location.href='{% url 'board_routine:detail' post.pk %}'">
             {% if post.image %}
                 <img src="{{ post.image.url }}" class="card-img-top" style="height: 200px; object-fit: cover;" alt="{{ post.title }}">
             {% else %}
@@ -33,9 +33,6 @@
                     <small class="text-muted">
                         챌린저: {{ post.full_name }} | {{ post.created_at|date:"Y-m-d H:i" }}
                     </small>
-                    <div class="mt-2">
-                        <a href="{% url 'board_routine:detail' post.pk %}" class="btn btn-outline-success btn-sm">상세 보기</a>
-                    </div>
                 </div>
             </div>
         </div>
