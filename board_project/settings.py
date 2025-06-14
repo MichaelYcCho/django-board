@@ -11,6 +11,11 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import os
+from dotenv import load_dotenv
+
+# .env 파일 로드
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,10 +25,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-rkprtlad%5o&kc2c7#cx0k4t=sl=&amno4^5yz%1gjzoz4^#&j"
+SECRET_KEY = os.getenv(
+    "SECRET_KEY", "django-insecure-rkprtlad%5o&kc2c7#cx0k4t=sl=&amno4^5yz%1gjzoz4^#&j"
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv("DEBUG", "True").lower() == "true"
 
 ALLOWED_HOSTS = ["*"]
 
@@ -45,6 +52,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "storages",
     "board_photo",
     "board_routine",
 ]
@@ -127,9 +135,47 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 
-# Media files
-MEDIA_URL = "/media/"
-MEDIA_ROOT = BASE_DIR / "media"
+# AWS S3 설정
+AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
+AWS_STORAGE_BUCKET_NAME = os.getenv("AWS_STORAGE_BUCKET_NAME", "estedu-img")
+AWS_S3_REGION_NAME = os.getenv("AWS_S3_REGION_NAME", "ap-northeast-2")
+AWS_S3_CUSTOM_DOMAIN = os.getenv(
+    "AWS_S3_CUSTOM_DOMAIN", "estedu-img.s3.ap-northeast-2.amazonaws.com"
+)
+
+# S3 설정 - 더 명확한 설정
+AWS_S3_OBJECT_PARAMETERS = {
+    "CacheControl": "max-age=86400",
+}
+AWS_S3_FILE_OVERWRITE = False
+AWS_S3_VERIFY = True
+AWS_QUERYSTRING_AUTH = False  # URL에 인증 정보를 포함하지 않음
+
+# 미디어 파일 S3 설정 - Django 4.2+ 방식
+if AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY:
+    print("S3 스토리지 사용 중...")
+    STORAGES = {
+        "default": {
+            "BACKEND": "board_project.storage_backends.MediaStorage",
+        },
+        "staticfiles": {
+            "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+        },
+    }
+    MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/media/"
+else:
+    print("로컬 스토리지 사용 중...")
+    STORAGES = {
+        "default": {
+            "BACKEND": "django.core.files.storage.FileSystemStorage",
+        },
+        "staticfiles": {
+            "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+        },
+    }
+    MEDIA_URL = "/media/"
+    MEDIA_ROOT = BASE_DIR / "media"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

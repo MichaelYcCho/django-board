@@ -3,8 +3,14 @@ from django.core.validators import FileExtensionValidator
 
 
 def upload_to_photo(instance, filename):
-    """사진 업로드 경로"""
-    return f"board_photo/{filename}"
+    """사진 업로드 경로 - S3의 board_photo 폴더에 저장"""
+    import uuid
+    import os
+
+    # 파일 확장자 유지하면서 고유한 파일명 생성
+    ext = filename.split(".")[-1]
+    unique_filename = f"{uuid.uuid4().hex}.{ext}"
+    return f"board_photo/{unique_filename}"
 
 
 class PhotoBoard(models.Model):

@@ -3,8 +3,14 @@ from django.core.validators import FileExtensionValidator
 
 
 def upload_to_routine(instance, filename):
-    """읽걷쓰 루틴 챌린지 인증사진 업로드 경로"""
-    return f"read_walk_write_challenge/{filename}"
+    """읽걷쓰 루틴 챌린지 인증사진 업로드 경로 - S3의 read_walk_write_challenge 폴더에 저장"""
+    import uuid
+    import os
+
+    # 파일 확장자 유지하면서 고유한 파일명 생성
+    ext = filename.split(".")[-1]
+    unique_filename = f"{uuid.uuid4().hex}.{ext}"
+    return f"read_walk_write_challenge/{unique_filename}"
 
 
 class RoutineBoard(models.Model):

@@ -1,2 +1,5 @@
 __pycache__
 media
+.env
+*.pyc
+.DS_Store
