@@ -33,7 +33,7 @@ DATABASES = {
 }
 
 # 정적 파일 설정
-STATIC_ROOT = "/home/ubuntu/django-board/static/"
+STATIC_ROOT = "/home/ubuntu/django-board/staticfiles/"
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # 로깅 설정
