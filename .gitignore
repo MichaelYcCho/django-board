@@ -3,3 +3,5 @@ media
 .env
 *.pyc
 .DS_Store
+staticfiles
+db.sqlite3

@@ -116,6 +116,34 @@ django-board/
 - 검색, 필터링 기능
 - 일괄 작업 지원
 
+## 프로덕션 배포
+
+### EC2 배포 방법
+자세한 배포 가이드는 [DEPLOYMENT.md](DEPLOYMENT.md)를 참고하세요.
+
+#### 빠른 배포
+1. EC2 인스턴스 생성 (Ubuntu 22.04 LTS)
+2. 프로젝트를 GitHub에 업로드
+3. EC2에서 배포 스크립트 실행:
+```bash
+curl -O https://raw.githubusercontent.com/YOUR_USERNAME/django-board/main/deploy.sh
+chmod +x deploy.sh
+./deploy.sh
+```
+
+#### 필요한 설정
+- `.env` 파일 환경변수 설정
+- Nginx 도메인/IP 설정
+- SSL 인증서 설치 (선택사항)
+
+### 기술 스택 (프로덕션)
+- **백엔드**: Django 5.2.3, Gunicorn
+- **프론트엔드**: Bootstrap 5, HTML/CSS/JavaScript
+- **데이터베이스**: PostgreSQL
+- **웹서버**: Nginx
+- **스토리지**: AWS S3
+- **배포**: EC2 (Ubuntu)
+
 ## 개발자 정보
 
 이 프로젝트는 Django 게시판 학습을 위해 제작되었습니다.
