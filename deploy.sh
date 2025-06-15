@@ -53,8 +53,9 @@ python manage.py migrate
 
 # 로그 디렉토리 생성
 echo "📋 로그 디렉토리 설정 중..."
-sudo mkdir -p /var/log/django /var/log/gunicorn
-sudo chown ubuntu:ubuntu /var/log/django /var/log/gunicorn
+mkdir -p $PROJECT_DIR/logs
+sudo mkdir -p /var/log/gunicorn
+sudo chown ubuntu:ubuntu /var/log/gunicorn
 
 # Gunicorn 시스템 서비스 설정
 echo "🔧 Gunicorn 서비스 설정 중..."

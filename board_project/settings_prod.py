@@ -45,7 +45,7 @@ LOGGING = {
         "file": {
             "level": "INFO",
             "class": "logging.FileHandler",
-            "filename": "/var/log/django/django-board.log",
+            "filename": "/home/ubuntu/django-board/logs/django-board.log",
         },
     },
     "loggers": {
