@@ -6,7 +6,7 @@ set -e
 echo "🚀 Django 프로젝트 배포를 시작합니다..."
 
 # 프로젝트 디렉토리
-PROJECT_DIR="/var/www/django-board"
+PROJECT_DIR="/home/ubuntu/django-board"
 REPO_URL="https://github.com/MichaelYcCho/django-board.git"  # 실제 GitHub 저장소 URL로 변경
 
 # # 시스템 업데이트
