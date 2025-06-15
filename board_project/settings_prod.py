@@ -8,8 +8,7 @@ import os
 # 보안 설정
 DEBUG = False
 ALLOWED_HOSTS = [
-    "your-domain.com",  # 실제 도메인으로 변경
-    "your-ec2-public-ip",  # EC2 퍼블릭 IP로 변경
+    "54.180.71.125",  # EC2 퍼블릭 IP
     "localhost",
     "127.0.0.1",
 ]
