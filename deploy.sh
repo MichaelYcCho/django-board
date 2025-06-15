@@ -83,16 +83,77 @@ sudo cp nginx.conf /etc/nginx/sites-available/django-board
 sudo ln -sf /etc/nginx/sites-available/django-board /etc/nginx/sites-enabled/
 sudo rm -f /etc/nginx/sites-enabled/default
 
-# 서비스 시작
+# Nginx 설정 문법 검사
+echo "🔍 Nginx 설정 검사 중..."
+sudo nginx -t
+
+# 서비스 시작/재시작
 echo "🚀 서비스 시작 중..."
 sudo systemctl daemon-reload
-sudo systemctl enable django-board
-sudo systemctl start django-board
-sudo systemctl enable nginx
-sudo systemctl restart nginx
 
+# Django 애플리케이션 재시작 (설정 변경사항 반영)
+sudo systemctl enable django-board
+if sudo systemctl is-active --quiet django-board; then
+    echo "🔄 Django 서비스 재시작 중..."
+    sudo systemctl restart django-board
+else
+    echo "🆕 Django 서비스 시작 중..."
+    sudo systemctl start django-board
+fi
+
+# Nginx 재시작 (설정 변경사항 반영)
+sudo systemctl enable nginx
+if sudo systemctl is-active --quiet nginx; then
+    echo "🔄 Nginx 재시작 중..."
+    sudo systemctl reload nginx  # reload는 restart보다 빠름
+else
+    echo "🆕 Nginx 시작 중..."
+    sudo systemctl start nginx
+fi
+
+# 서비스 상태 확인
+echo "📊 서비스 상태 확인 중..."
+sleep 2  # 서비스 시작 대기
+
+if sudo systemctl is-active --quiet django-board; then
+    echo "✅ Django 서비스: 정상"
+else
+    echo "❌ Django 서비스: 오류"
+    sudo systemctl status django-board --no-pager -l
+fi
+
+if sudo systemctl is-active --quiet nginx; then
+    echo "✅ Nginx 서비스: 정상"
+else
+    echo "❌ Nginx 서비스: 오류"
+    sudo systemctl status nginx --no-pager -l
+fi
+
+# 포트 확인
+echo "🔌 포트 확인 중..."
+if sudo netstat -tlnp | grep :80 > /dev/null; then
+    echo "✅ 포트 80: 열림"
+else
+    echo "❌ 포트 80: 닫힘"
+fi
+
+if sudo netstat -tlnp | grep :8000 > /dev/null; then
+    echo "✅ 포트 8000: 열림"
+else
+    echo "❌ 포트 8000: 닫힘"
+fi
+
+# 연결 테스트
+echo "🌐 연결 테스트 중..."
+if curl -s -o /dev/null -w "%{http_code}" http://localhost | grep -q "200\|301\|302"; then
+    echo "✅ 로컬 연결: 성공"
+else
+    echo "❌ 로컬 연결: 실패"
+fi
+
+echo ""
 echo "✅ 배포가 완료되었습니다!"
-echo "🌐 웹사이트 확인: http://your-ec2-public-ip"
+echo "🌐 웹사이트 확인: http://54.180.71.125"
 echo ""
 echo "📋 추가 작업 필요:"
 echo "1. .env 파일의 실제 값 입력"
