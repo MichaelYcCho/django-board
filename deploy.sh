@@ -9,18 +9,18 @@ echo "🚀 Django 프로젝트 배포를 시작합니다..."
 PROJECT_DIR="/var/www/django-board"
 REPO_URL="https://github.com/MichaelYcCho/django-board.git"  # 실제 GitHub 저장소 URL로 변경
 
-# 시스템 업데이트
-echo "📦 시스템 패키지 업데이트 중..."
-sudo apt update && sudo apt upgrade -y
+# # 시스템 업데이트
+# echo "📦 시스템 패키지 업데이트 중..."
+# sudo apt update && sudo apt upgrade -y
 
-# 필수 패키지 설치
-echo "📦 필수 패키지 설치 중..."
-sudo apt install -y python3 python3-pip python3-venv nginx git
+# # 필수 패키지 설치
+# echo "📦 필수 패키지 설치 중..."
+# sudo apt install -y python3 python3-pip python3-venv nginx git
 
-# 프로젝트 디렉토리 생성
-echo "📁 프로젝트 디렉토리 설정 중..."
-sudo mkdir -p $PROJECT_DIR
-sudo chown ubuntu:ubuntu $PROJECT_DIR
+# # 프로젝트 디렉토리 생성
+# echo "📁 프로젝트 디렉토리 설정 중..."
+# sudo mkdir -p $PROJECT_DIR
+# sudo chown ubuntu:ubuntu $PROJECT_DIR
 
 # Git 저장소 클론 또는 업데이트
 if [ -d "$PROJECT_DIR/.git" ]; then
@@ -35,7 +35,7 @@ fi
 
 # 가상환경 생성 및 활성화
 echo "🐍 Python 가상환경 설정 중..."
-python3 -m venv venv
+#python3 -m venv venv
 source venv/bin/activate
 
 # 의존성 설치
