@@ -4,8 +4,8 @@ from django.core.files.base import ContentFile
 from PIL import Image
 from io import BytesIO
 import random
+from board_photo.views import hash_password
 from board_routine.models import RoutineBoard
-from board_routine.utils import hash_password
 
 
 class Command(BaseCommand):
