@@ -1,5 +1,7 @@
 from django.db import models
 from django.core.validators import FileExtensionValidator
+from django.utils import timezone
+from datetime import timedelta
 
 
 def upload_to_routine(instance, filename):
@@ -11,6 +13,19 @@ def upload_to_routine(instance, filename):
     ext = filename.split(".")[-1]
     unique_filename = f"{uuid.uuid4().hex}.{ext}"
     return f"read_walk_write_challenge/{unique_filename}"
+
+
+class Like(models.Model):
+    ip_address = models.GenericIPAddressField("IP 주소")
+    created_at = models.DateTimeField("생성일", auto_now_add=True)
+    routine = models.ForeignKey('RoutineBoard', on_delete=models.CASCADE, related_name='likes')
+
+    class Meta:
+        verbose_name = "좋아요"
+        verbose_name_plural = "좋아요"
+
+    def __str__(self):
+        return f"{self.ip_address} - {self.routine.title}"
 
 
 class RoutineBoard(models.Model):
@@ -44,3 +59,14 @@ class RoutineBoard(models.Model):
     @property
     def full_name(self):
         return f"{self.last_name}{self.first_name}"
+
+    def can_like(self, ip_address):
+        """해당 IP가 5분 이내에 좋아요를 누를 수 있는지 확인"""
+        last_like = self.likes.filter(ip_address=ip_address).order_by('-created_at').first()
+        if not last_like:
+            return True
+        return timezone.now() - last_like.created_at > timedelta(minutes=5)
+
+    def get_like_count(self):
+        """좋아요 수 반환"""
+        return self.likes.count()

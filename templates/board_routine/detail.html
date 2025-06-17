@@ -3,50 +3,66 @@
 {% block title %}{{ post.title }} - 루틴 게시판{% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-lg-8 mx-auto">
-        <div class="card">
-            <div class="card-header">
-                <h3 class="mb-0">{{ post.title }}</h3>
-                <small class="text-light">
-                    작성자: {{ post.full_name }} | 
-                    작성일: {{ post.created_at|date:"Y년 m월 d일 H:i" }}
-                    {% if post.updated_at != post.created_at %}
-                        | 수정일: {{ post.updated_at|date:"Y년 m월 d일 H:i" }}
-                    {% endif %}
-                </small>
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-body">
+            <h2 class="card-title">{{ post.title }}</h2>
+            <p class="text-muted">작성자: {{ post.full_name }} | 작성일: {{ post.created_at|date:"Y-m-d H:i" }}</p>
+            
+            {% if post.image %}
+            <div class="mb-4">
+                <img src="{{ post.image.url }}" class="img-fluid" alt="인증사진">
             </div>
-            <div class="card-body">
-                {% if post.image %}
-                <div class="text-center mb-4">
-                    <img src="{{ post.image.url }}" class="img-fluid rounded" alt="{{ post.title }}" style="max-height: 500px;">
-                </div>
-                {% endif %}
-                
-                <div class="mb-3">
-                    <strong>이메일:</strong> {{ post.email }}
-                </div>
-                
-                <div class="content">
-                    {{ post.content|linebreaks }}
-                </div>
+            {% endif %}
+            
+            <div class="card-text">
+                {{ post.content|linebreaks }}
             </div>
-            <div class="card-footer bg-white">
-                <div class="d-flex justify-content-between">
-                    <a href="{% url 'board_routine:list' %}" class="btn btn-secondary">
-                        <i class="fas fa-list"></i> 목록으로
-                    </a>
-                    <div>
-                        <a href="{% url 'board_routine:update' post.pk %}" class="btn btn-outline-primary">
-                            <i class="fas fa-edit"></i> 수정
-                        </a>
-                        <a href="{% url 'board_routine:delete' post.pk %}" class="btn btn-outline-danger">
-                            <i class="fas fa-trash"></i> 삭제
-                        </a>
-                    </div>
+
+            <div class="mt-4 d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center gap-2">
+                    <button id="likeButton" class="btn btn-outline-danger {% if not can_like %}disabled{% endif %}" 
+                            data-routine-id="{{ post.pk }}">
+                        <i class="fas fa-heart {% if can_like %}text-danger{% endif %}"></i>
+                        ❤️  <span id="likeCount">{{ like_count }}</span> 
+                    </button>
+                </div>
+                <div class="d-flex gap-2">
+                    <a href="{% url 'board_routine:list' %}" class="btn btn-secondary">목록</a>
+                    <a href="{% url 'board_routine:update' post.pk %}" class="btn btn-primary">수정</a>
+                    <a href="{% url 'board_routine:delete' post.pk %}" class="btn btn-danger">삭제</a>
                 </div>
             </div>
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.getElementById('likeButton').addEventListener('click', function() {
+    if (this.classList.contains('disabled')) return;
+    
+    const routineId = this.dataset.routineId;
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    
+    fetch(`/routine/${routineId}/like/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': csrfToken,
+            'Content-Type': 'application/json',
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            document.getElementById('likeCount').textContent = data.like_count;
+            this.classList.add('disabled');
+            this.querySelector('i').classList.add('text-danger');
+        } else {
+            alert(data.message);
+        }
+    });
+});
+</script>
 {% endblock %}

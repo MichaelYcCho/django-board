@@ -1,10 +1,12 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.core.paginator import Paginator
-from django.http import Http404
-from .models import RoutineBoard
+from django.http import Http404, JsonResponse
+from .models import RoutineBoard, Like
 from .forms import RoutineBoardForm, RoutineBoardUpdateForm, PasswordVerifyForm
 import hashlib
+from django.views.decorators.http import require_POST
+from django.utils import timezone
 
 
 def hash_password(password):
@@ -29,19 +31,36 @@ def routine_list(request):
 def routine_detail(request, pk):
     """루틴 게시판 상세보기"""
     post = get_object_or_404(RoutineBoard, pk=pk)
-    return render(request, "board_routine/detail.html", {"post": post})
+    client_ip = request.META.get('REMOTE_ADDR')
+    can_like = post.can_like(client_ip)
+    like_count = post.get_like_count()
+    return render(request, 'board_routine/detail.html', {
+        'post': post,
+        'can_like': can_like,
+        'like_count': like_count
+    })
 
 
 def routine_create(request):
     """루틴 게시판 글 작성"""
     if request.method == "POST":
+        print('시작')
         form = RoutineBoardForm(request.POST, request.FILES)
+        print(f"Form errors: {form.errors}")  # 디버깅용
         if form.is_valid():
-            post = form.save(commit=False)
-            post.password = hash_password(form.cleaned_data["password"])
-            post.save()
-            messages.success(request, "글이 성공적으로 작성되었습니다.")
-            return redirect("board_routine:detail", pk=post.pk)
+            print('유효')
+            try:
+                routine = form.save(commit=False)
+                routine.password = hash_password(form.cleaned_data['password'])
+                routine.save()
+                messages.success(request, "글이 성공적으로 작성되었습니다.")
+                return redirect("board_routine:detail", pk=routine.pk)
+            except Exception as e:
+                print(f"Error saving routine: {str(e)}")  # 디버깅용
+                messages.error(request, f"글 저장 중 오류가 발생했습니다: {str(e)}")
+        else:
+            print(f"Form is not valid: {form.errors}")  # 디버깅용
+            messages.error(request, "입력하신 정보에 오류가 있습니다.")
     else:
         form = RoutineBoardForm()
 
@@ -61,9 +80,15 @@ def routine_update(request, pk):
             form = RoutineBoardUpdateForm(request.POST, request.FILES, instance=post)
             if form.is_valid():
                 print("Form is valid, saving...")  # 디버깅용
-                form.save()
-                messages.success(request, "글이 성공적으로 수정되었습니다.")
-                return redirect("board_routine:detail", pk=post.pk)
+                try:
+                    updated_post = form.save(commit=False)
+                    # 비밀번호는 그대로 유지
+                    updated_post.save()
+                    messages.success(request, "글이 성공적으로 수정되었습니다.")
+                    return redirect("board_routine:detail", pk=post.pk)
+                except Exception as e:
+                    print(f"Error saving post: {str(e)}")  # 디버깅용
+                    messages.error(request, f"글 저장 중 오류가 발생했습니다: {str(e)}")
             else:
                 print(f"Form errors: {form.errors}")  # 디버깅용
                 # 폼 에러가 있으면 에러 메시지와 함께 다시 수정 폼 표시
@@ -132,7 +157,7 @@ def routine_delete(request, pk):
             if hash_password(password) == post.password:
                 post.delete()
                 messages.success(request, "글이 성공적으로 삭제되었습니다.")
-                return redirect("board_routine:list")
+                return redirect("routine_list")
             else:
                 messages.error(request, "비밀번호가 올바르지 않습니다.")
 
@@ -142,3 +167,39 @@ def routine_delete(request, pk):
         "board_routine/delete.html",
         {"password_form": password_form, "post": post},
     )
+
+
+@require_POST
+def like_routine(request, pk):
+    print(f"Like request received for post {pk}")  # 디버깅용
+    try:
+        routine = get_object_or_404(RoutineBoard, pk=pk)
+        client_ip = request.META.get('REMOTE_ADDR')
+        print(f"Client IP: {client_ip}")  # 디버깅용
+        
+        if not routine.can_like(client_ip):
+            print(f"Like not allowed for IP {client_ip} - 5 minute cooldown")  # 디버깅용
+            return JsonResponse({
+                'status': 'error',
+                'message': '5분 후에 다시 시도해주세요.'
+            })
+        
+        print(f"Creating like for post {pk} from IP {client_ip}")  # 디버깅용
+        Like.objects.create(
+            routine=routine,
+            ip_address=client_ip
+        )
+        
+        like_count = routine.get_like_count()
+        print(f"New like count: {like_count}")  # 디버깅용
+        
+        return JsonResponse({
+            'status': 'success',
+            'like_count': like_count
+        })
+    except Exception as e:
+        print(f"Error in like_routine: {str(e)}")  # 디버깅용
+        return JsonResponse({
+            'status': 'error',
+            'message': f'좋아요 처리 중 오류가 발생했습니다'
+        }, status=500)

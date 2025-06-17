@@ -20,11 +20,13 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from . import views
+from board_routine.views import like_routine
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("photo/", include("board_photo.urls")),
     path("routine/", include("board_routine.urls")),
+    path("routine/<int:pk>/like/", like_routine, name="like_routine"),
     path("", views.home, name="home"),  # 홈페이지
 ]
 
