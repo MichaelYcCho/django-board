@@ -4,8 +4,11 @@
 
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2>사진 게시판</h2>
-    <a href="{% url 'board_photo:create' %}" class="btn btn-primary">
+    <div>
+        <h2>📸 사진 게시판</h2>
+        <p class="text-muted">나만의 특별한 순간을 공유해보세요!</p>
+    </div>
+    <a href="{% url 'board_photo:create' %}" class="btn btn-success">
         <i class="fas fa-plus"></i> 새 글 작성
     </a>
 </div>
@@ -18,7 +21,7 @@
                 <img src="{{ post.image.url }}" class="card-img-top" style="height: 200px; object-fit: cover;" alt="{{ post.title }}">
             {% else %}
                 <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
-                    <i class="fas fa-image fa-3x text-muted"></i>
+                    <i class="fas fa-camera fa-3x text-muted"></i>
                 </div>
             {% endif %}
             <div class="card-body d-flex flex-column">
@@ -27,9 +30,14 @@
                     {{ post.content|truncatewords:10 }}
                 </p>
                 <div class="mt-auto">
-                    <small class="text-muted">
-                        작성자: {{ post.full_name }} | {{ post.created_at|date:"Y-m-d H:i" }}
-                    </small>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small class="text-muted">
+                            작성자: {{ post.full_name }} | {{ post.created_at|date:"Y-m-d H:i" }}
+                        </small>
+                        <small class="text-danger">
+                            <i class="fas fa-heart"></i> ❤️ {{ post.get_like_count }}
+                        </small>
+                    </div>
                 </div>
             </div>
         </div>
@@ -38,37 +46,37 @@
     <div class="col-12">
         <div class="text-center py-5">
             <i class="fas fa-camera fa-3x text-muted mb-3"></i>
-            <h4 class="text-muted">아직 작성된 글이 없습니다.</h4>
-            <p class="text-muted">첫 번째 글을 작성해보세요!</p>
-            <a href="{% url 'board_photo:create' %}" class="btn btn-primary">글 작성하기</a>
+            <h4 class="text-muted">아직 게시글이 없습니다.</h4>
+            <p class="text-muted">첫 번째 사진을 공유해보세요!</p>
+            <a href="{% url 'board_photo:create' %}" class="btn btn-success">새 글 작성</a>
         </div>
     </div>
     {% endfor %}
 </div>
 
 <!-- 페이지네이션 -->
-{% if page_obj.has_other_pages %}
+{% if posts.has_other_pages %}
 <nav aria-label="페이지 네비게이션">
     <ul class="pagination justify-content-center">
-        {% if page_obj.has_previous %}
+        {% if posts.has_previous %}
             <li class="page-item">
                 <a class="page-link" href="?page=1">처음</a>
             </li>
             <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">이전</a>
+                <a class="page-link" href="?page={{ posts.previous_page_number }}">이전</a>
             </li>
         {% endif %}
         
         <li class="page-item active">
-            <span class="page-link">{{ page_obj.number }}</span>
+            <span class="page-link">{{ posts.number }}</span>
         </li>
         
-        {% if page_obj.has_next %}
+        {% if posts.has_next %}
             <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.next_page_number }}">다음</a>
+                <a class="page-link" href="?page={{ posts.next_page_number }}">다음</a>
             </li>
             <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">마지막</a>
+                <a class="page-link" href="?page={{ posts.paginator.num_pages }}">마지막</a>
             </li>
         {% endif %}
     </ul>

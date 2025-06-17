@@ -157,7 +157,7 @@ def routine_delete(request, pk):
             if hash_password(password) == post.password:
                 post.delete()
                 messages.success(request, "글이 성공적으로 삭제되었습니다.")
-                return redirect("routine_list")
+                return redirect("board_routine:list")
             else:
                 messages.error(request, "비밀번호가 올바르지 않습니다.")
 
