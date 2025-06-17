@@ -169,12 +169,21 @@ def routine_delete(request, pk):
     )
 
 
+def get_client_ip(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
+
+
 @require_POST
 def like_routine(request, pk):
     print(f"Like request received for post {pk}")  # 디버깅용
     try:
         routine = get_object_or_404(RoutineBoard, pk=pk)
-        client_ip = request.META.get('REMOTE_ADDR')
+        client_ip = get_client_ip(request)
         print(f"Client IP: {client_ip}")  # 디버깅용
         
         if not routine.can_like(client_ip):

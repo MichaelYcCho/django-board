@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import RoutineBoard
+from .models import RoutineBoard, Like
 
 
 @admin.register(RoutineBoard)
@@ -9,6 +9,7 @@ class RoutineBoardAdmin(admin.ModelAdmin):
     search_fields = ["title", "first_name", "last_name", "email", "content"]
     readonly_fields = ["created_at", "updated_at"]
     ordering = ["-created_at"]
+    date_hierarchy = 'created_at'
 
     fieldsets = (
         ("기본 정보", {"fields": ("title", "first_name", "last_name", "email")}),
@@ -19,3 +20,11 @@ class RoutineBoardAdmin(admin.ModelAdmin):
             {"fields": ("created_at", "updated_at"), "classes": ("collapse",)},
         ),
     )
+
+
+@admin.register(Like)
+class LikeAdmin(admin.ModelAdmin):
+    list_display = ('ip_address', 'routine', 'created_at')
+    list_filter = ('created_at',)
+    search_fields = ('ip_address', 'routine__title')
+    date_hierarchy = 'created_at'
